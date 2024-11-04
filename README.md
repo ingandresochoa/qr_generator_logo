@@ -29,10 +29,10 @@ This project is a simple tool in Python to generate QR codes that include a logo
 ## Usage:
 1. Place your logo image in the project folder. Ensure it's in .png format for better compatibility.
 2. In the main file (qr_with_logo.py), adjust the following variables according to your needs:
-   - **data: The content of the QR code (e.g., a URL or text).
-   - **logo_path: The path to your logo image (e.g., "logo.png").
-   - **output_path: The path and filename where the generated QR code will be saved (e.g., "qr_with_logo.png").
-   - **logo_size_ratio: The relative size of the logo compared to the QR code (e.g., 0.25 for the logo to occupy 25% of the QR code width).
+   - **data**: The content of the QR code (e.g., a URL or text).
+   - **logo_path**: The path to your logo image (e.g., "logo.png").
+   - **output_path**: The path and filename where the generated QR code will be saved (e.g., "qr_with_logo.png").
+   - **logo_size_ratio**: The relative size of the logo compared to the QR code (e.g., 0.25 for the logo to occupy 25% of the QR code width).
 
 ## Run the script:
   ```bash
