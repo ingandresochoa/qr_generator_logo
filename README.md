@@ -45,11 +45,10 @@ pip install flask pillow qrcode flask-cors
 ## 📁 Estructura del Proyecto
 
 ```
-qr-generator/
+qr_generator_logo/
 │
 ├── main.py              # Servidor Flask
 ├── README.md            # Este archivo
-├── requirements.txt     # Dependencias del proyecto
 ├── static/              # Archivos estáticos
 │   └── uploads/         # Carpeta para uploads temporales
 └── templates/
