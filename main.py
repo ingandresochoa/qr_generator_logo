@@ -5,7 +5,15 @@ from PIL import Image
 from flask import Flask, request, jsonify, render_template
 from io import BytesIO
 
-def generate_qr_with_logo(data, logo_path, output_path, logo_size_ratio=0.25):
+app = Flask(__name__)
+
+UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def generate_qr_with_logo(data, logo_path, logo_size_ratio=0.25):
     # Create a qr code
     qr = qrcode.QRCode(
         version=1,
@@ -16,7 +24,6 @@ def generate_qr_with_logo(data, logo_path, output_path, logo_size_ratio=0.25):
 
     qr.add_data(data)
     qr.make(fit=True)
-
     qr_image = qr.make_image(fill_color="black", back_color="white").convert("RGB")
 
     # Open the logo image and resize it proportionally
@@ -31,11 +38,37 @@ def generate_qr_with_logo(data, logo_path, output_path, logo_size_ratio=0.25):
     qr_image.paste(logo, pos, mask=logo if logo.mode == "RGBA" else None)
 
     # Save the qr code with logo
-    qr_image.save(output_path)
-    print(f"QR code and logo generated successfully! - {output_path}")
+    img_buffer = BytesIO()
+    qr_image.save(img_buffer, format="PNG")
+    img_str = base64.b64encode(img_buffer.getvalue()).decode()
+
+    return img_str
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/generate', methods=['POST'])
+def generate():
+    try:
+        data = request.form.get('data')
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        if 'logo' not in request.files:
+            return jsonify({'error': 'No logo provided'}), 400
+        
+        logo_file = request.files['logo']
+        if logo_file.filename == '':
+            return jsonify({'error': 'No logo selected'}), 400
+        
+        img_str = generate_qr_with_logo(data, logo_file)
+
+        return jsonify({'success': True, 'image': img_str})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Usage 
-data = "https://www.tiktok.com/@ingandresochoa" # Replace with your data to be encoded
-logo_path = "ouroboro.jpg" # Replace with the path to your logo
-output_path = "" # Replace with the desired output path
-generate_qr_with_logo(data, logo_path, output_path)
+if __name__ == '__main__':
+    app.run(debug=True)
