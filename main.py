@@ -1,5 +1,9 @@
 import qrcode
+import base64
+import os
 from PIL import Image
+from flask import Flask, request, jsonify, render_template
+from io import BytesIO
 
 def generate_qr_with_logo(data, logo_path, output_path, logo_size_ratio=0.25):
     # Create a qr code
